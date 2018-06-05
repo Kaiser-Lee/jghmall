@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jghmall.union.discovery.dao.DiscoveryMapper" >
+  
+  <!-- <resultMap type="WechatUser" id="wechatUserMap">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+  	<result column="nick" property="nick" jdbcType="VARCHAR"/>
+  </resultMap>
+   -->
+  <resultMap id="BaseResultMap" type="com.jghmall.union.discovery.entity.Discovery" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="content_image" property="contentImage" jdbcType="VARCHAR" />
+    <result column="content_text" property="contentText" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="hot_count" property="hotCount" jdbcType="INTEGER" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+   <result column="wechat_user_id" property="wechatUserId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, content_image, content_text, create_time, hot_count, position, status, wechat_user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from discovery
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryForList" resultType="hashmap">
+  	select a.id,a.content_text,a.create_time,a.`status`,b.nick from discovery a
+	left join wechat_user b on b.id = a.wechat_user_id
+  </select>
+  
+  <select id="getListByContent" resultType="hashmap" parameterType="java.lang.String">
+  	select a.id as discovery_id ,a.content_text,a.create_time,a.status,b.nick from discovery a
+	left join wechat_user b on b.id = a.wechat_user_id
+	where content_text LIKE CONCAT('%',#{contentText},'%') 
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from discovery
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jghmall.union.discovery.entity.Discovery" useGeneratedKeys="true" keyProperty="id" >
+    insert into discovery (content_image, content_text, create_time, 
+      hot_count, position, status, 
+      wechat_user_id)
+    values (#{contentImage,jdbcType=VARCHAR}, #{contentText,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{hotCount,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{wechatUserId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jghmall.union.discovery.entity.Discovery" useGeneratedKeys="true" keyProperty="id" >
+    insert into discovery
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contentImage != null" >
+        content_image,
+      </if>
+      <if test="contentText != null" >
+        content_text,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="hotCount != null" >
+        hot_count,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="wechatUserId != null" >
+        wechat_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contentImage != null" >
+        #{contentImage,jdbcType=VARCHAR},
+      </if>
+      <if test="contentText != null" >
+        #{contentText,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotCount != null" >
+        #{hotCount,jdbcType=INTEGER},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatUserId != null" >
+        #{wechatUserId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jghmall.union.discovery.entity.Discovery" >
+    update discovery
+    <set >
+      <if test="contentImage != null" >
+        content_image = #{contentImage,jdbcType=VARCHAR},
+      </if>
+      <if test="contentText != null" >
+        content_text = #{contentText,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotCount != null" >
+        hot_count = #{hotCount,jdbcType=INTEGER},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatUserId != null" >
+        wechat_user_id = #{wechatUserId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jghmall.union.discovery.entity.Discovery" >
+    update discovery
+    set content_image = #{contentImage,jdbcType=VARCHAR},
+      content_text = #{contentText,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      hot_count = #{hotCount,jdbcType=INTEGER},
+      position = #{position,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      wechat_user_id = #{wechatUserId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
